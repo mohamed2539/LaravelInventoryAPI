@@ -25,7 +25,7 @@ class User extends Authenticatable implements JWTSubject
         'password',
     ];
 
-    // ✅ دوال الـ JWT
+  
     public function getJWTIdentifier()
     {
         return $this->getKey();

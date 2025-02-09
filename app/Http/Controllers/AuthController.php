@@ -21,7 +21,7 @@ class AuthController extends Controller
 
         $validator = Validator::make($request->all(), [
             'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users', // ✅ إضافة البريد الإلكتروني
+            'email' => 'required|string|email|max:255|unique:users', //  إضافة البريد الإلكتروني
             'password' => 'required|string|min:6',
             'role' => 'required|string|in:admin,user'
         ]);
@@ -33,7 +33,7 @@ class AuthController extends Controller
 
         $user = User::create([
             'username' => $request->username,
-            'email' => $request->email, // ✅ إضافة البريد الإلكتروني
+            'email' => $request->email, //  إضافة البريد الإلكتروني
             'password' => Hash::make($request->password),
             'role' => $request->role
         ]);
@@ -49,7 +49,7 @@ class AuthController extends Controller
          */
     public function login(Request $request)
     {
-        // 1️⃣ التحقق من صحة البيانات
+        //  التحقق من صحة البيانات
         $validator = Validator::make($request->all(), [
             'username' => 'required|string',
             'password' => 'required|string|min:6',
@@ -59,19 +59,19 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        // 2️⃣ تجهيز البيانات
+        //  تجهيز البيانات
         $credentials = $request->only('username', 'password');
 
-        // 3️⃣ محاولة تسجيل الدخول
-        if (!$token = JWTAuth::attempt($credentials)) { // ✨ استخدام JWTAuth
+        //  محاولة تسجيل الدخول
+        if (!$token = JWTAuth::attempt($credentials)) { // استخدام JWTAuth
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // 4️⃣ إرسال التوكن مع المستخدم
+        //  إرسال التوكن مع المستخدم
         return response()->json([
             'message' => 'Login successful!',
             'user' => auth()->user(),
-            'token' => $token // ✨ التوكن الصحيح
+            'token' => $token //  التوكن الصحيح
         ]);
     }
 
@@ -94,7 +94,7 @@ class AuthController extends Controller
          */
     public function logout()
     {
-        JWTAuth::invalidate(JWTAuth::getToken()); // ✨ إلغاء التوكن
+        JWTAuth::invalidate(JWTAuth::getToken()); // إلغاء التوكن
 
         return response()->json(['message' => 'Successfully logged out']);
     }
