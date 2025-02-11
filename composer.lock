@@ -1521,7 +1521,7 @@
             "require": {
                 "ext-mbstring": "*",
                 "ext-openssl": "*",
-                "lcobucci/clock": "^2.0",
+                "lcobucci/clock": "^3.0",
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
