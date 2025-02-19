@@ -5,7 +5,7 @@ pipeline {
         DB_HOST = "127.0.0.1"
         DB_DATABASE = "tennewinventory"
         DB_USERNAME = "tenuser"
-        DB_PASSWORD = "password123"
+        DB_PASSWORD = "Password123!"
     }
 
     stages {
