@@ -75,7 +75,7 @@ pipeline {
         stage('Send Notifications') {
             steps {
                 echo 'Sending notifications...'
-               mohamed.carinawear@gmail.com
+              // mohamed.carinawear@gmail.com
 
             }
         }
