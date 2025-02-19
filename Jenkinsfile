@@ -16,10 +16,9 @@ pipeline {
             }
         }
 
-        stage('Setup ENV') {
+        stage('Set Environment Variables') {
             steps {
-                script {
-                    sh """
+                sh """
                     echo "APP_NAME=Laravel" > .env
                     echo "APP_ENV=production" >> .env
                     echo "APP_KEY=base64:tWKezMZKeU8w8P8/kybQr3spbbB2pvHOmUBfSIeVFFA=" >> .env
@@ -34,21 +33,20 @@ pipeline {
                     echo "DB_DATABASE=${DB_DATABASE}" >> .env
                     echo "DB_USERNAME=${DB_USERNAME}" >> .env
                     echo "DB_PASSWORD=${DB_PASSWORD}" >> .env
-                    """
-                }
+                """
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'composer install --no-dev --prefer-dist'
+                sh 'composer install --no-interaction --prefer-dist'
             }
         }
 
         stage('Clear Cache') {
             steps {
-                sh 'php artisan config:clear'
                 sh 'php artisan cache:clear'
+                sh 'php artisan config:clear'
                 sh 'php artisan config:cache'
             }
         }
@@ -59,20 +57,27 @@ pipeline {
             }
         }
 
-        stage('Restart Server') {
+        **stage('Deploy Application') {**
             steps {
-                sh 'sudo systemctl restart apache2' // أو nginx حسب سيرفرك
+                echo 'Deploying application...'
+
+                // تعديل التصاريح عشان Jenkins يقدر يشغل التطبيق
+                sh 'sudo chown -R jenkins:www-data storage bootstrap/cache'
+                sh 'sudo chmod -R 775 storage bootstrap/cache'
+
+                // عمل Restart للـ Apache2 عشان يطبق التغييرات
+                sh 'sudo systemctl restart apache2'
+
+                echo 'Application Deployed Successfully via Apache2! 🚀'
+            }
+        }
+
+        stage('Send Notifications') {
+            steps {
+                echo 'Sending notifications...'
+               mohamed.carinawear@gmail.com
+
             }
         }
     }
-
-    post {
-        success {
-            echo '✅ Build completed successfully!'
-        }
-        failure {
-            echo '❌ Build failed!'
-        }
-    }
 }
-
