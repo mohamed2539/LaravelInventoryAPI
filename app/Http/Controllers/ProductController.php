@@ -41,9 +41,8 @@ class ProductController extends Controller
     {
         $product->update($request->all());
         return $product;
-    }
+   }
 
-    // حذف منتج
     public function destroy(Product $product)
     {
         $product->delete();
