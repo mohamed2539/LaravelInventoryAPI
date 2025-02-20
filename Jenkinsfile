@@ -6,15 +6,15 @@ pipeline {
         DB_DATABASE = "tennewinventory"
         DB_USERNAME = "tenuser"
         DB_PASSWORD = "Password123!"
+     	DEPLOY_SERVER = "mohamed@192.168.106.132"
+        DEPLOY_PATH = "/var/www/html"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code from GitHub...'
-
                 git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/mohamed2539/LaravelInventoryAPI.git'
-
             }
         }
 
@@ -27,8 +27,6 @@ pipeline {
                     echo "APP_DEBUG=false" >> .env
                     echo "APP_URL=http://192.168.106.132" >> .env
                     echo "LOG_CHANNEL=single" >> .env
-                    echo "LOG_DEPRECATIONS_CHANNEL=null" >> .env
-                    echo "LOG_LEVEL=debug" >> .env
                     echo "DB_CONNECTION=mysql" >> .env
                     echo "DB_HOST=${DB_HOST}" >> .env
                     echo "DB_PORT=3306" >> .env
@@ -63,12 +61,13 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                echo 'Deploying application...'
-                sh 'sudo cp -r * /var/www/html/'
-                sh 'sudo chown -R jenkins:www-data /var/www/html/storage /var/www/html/bootstrap/cache'
-                sh 'sudo chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache'
-                sh 'sudo systemctl restart apache2'
-                echo 'Application Deployed Successfully via Apache2! 🚀'
+                echo 'Deploying application using Rsync...'
+                sh '''
+                    rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" . ${DEPLOY_SERVER}:${DEPLOY_PATH}/
+                    ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} "sudo chown -R www-data:www-data ${DEPLOY_PATH}/storage ${DEPLOY_PATH}/bootstrap/cache && sudo chmod -R 775 ${DEPLOY_PATH}/storage ${DEPLOY_PATH}/bootstrap/cache"
+                    ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} "sudo systemctl restart apache2"
+                '''
+                echo 'Application Deployed Successfully via Rsync! 🚀'
             }
         }
 
