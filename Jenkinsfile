@@ -61,7 +61,7 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                echo 'Deploying application using Rsync...'
+                echo 'Deploying application using Rsync from DevOps Porject'
                 sh '''
                     rsync -avz --delete -e "ssh -o StrictHostKeyChecking=no" . ${DEPLOY_SERVER}:${DEPLOY_PATH}/
                     ssh -o StrictHostKeyChecking=no ${DEPLOY_SERVER} "sudo chown -R www-data:www-data ${DEPLOY_PATH}/storage ${DEPLOY_PATH}/bootstrap/cache && sudo chmod -R 775 ${DEPLOY_PATH}/storage ${DEPLOY_PATH}/bootstrap/cache"
