@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out source code from GitHub...'
+                echo 'every thing working will from here'
                 git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/mohamed2539/LaravelInventoryAPI.git'
             }
         }
