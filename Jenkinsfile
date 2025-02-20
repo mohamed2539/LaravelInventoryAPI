@@ -6,14 +6,14 @@ pipeline {
         DB_DATABASE = "tennewinventory"
         DB_USERNAME = "tenuser"
         DB_PASSWORD = "Password123!"
-     	DEPLOY_SERVER = "mohamed@192.168.106.132"
+	DEPLOY_SERVER = "mohamed@192.168.106.132"
         DEPLOY_PATH = "/var/www/html"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'My be every thing working will from herej '
+                echo 'My be every test test  thing working will from herej '
                 git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/mohamed2539/LaravelInventoryAPI.git'
             }
         }
