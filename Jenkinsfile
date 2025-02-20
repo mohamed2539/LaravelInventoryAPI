@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code from GitHub...'
-                git branch: 'main', url: 'https://github.com/YourUser/TenNewLaravelInventory.git'
+                git branch: 'main', url: 'https://github.com/mohamed2539/TenNewLaravelInventory.git'
             }
         }
 
