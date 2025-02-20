@@ -12,11 +12,9 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checking out source code from GitHub...'
-<<<<<<< HEAD
-                git branch: 'main', url: 'https://github.com/mohamed2539/TenNewLaravelInventory.git'
-=======
+
                 git branch: 'main', credentialsId: 'github-credentials', url: 'https://github.com/mohamed2539/LaravelInventoryAPI.git'
->>>>>>> e8c7e6f (new jenkins file)
+
             }
         }
 
