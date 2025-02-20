@@ -11,8 +11,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out source code...'
-                checkout scm
+                echo 'Checking out source code from GitHub...'
+                git branch: 'main', url: 'https://github.com/YourUser/TenNewLaravelInventory.git'
             }
         }
 
@@ -48,6 +48,8 @@ pipeline {
                 sh 'php artisan cache:clear'
                 sh 'php artisan config:clear'
                 sh 'php artisan config:cache'
+                sh 'php artisan route:cache'
+                sh 'php artisan view:cache'
             }
         }
 
@@ -60,24 +62,36 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 echo 'Deploying application...'
-
-                // تعديل التصاريح عشان Jenkins يقدر يشغل التطبيق
-                sh 'sudo chown -R jenkins:www-data storage bootstrap/cache'
-                sh 'sudo chmod -R 775 storage bootstrap/cache'
-
-                // عمل Restart للـ Apache2 عشان يطبق التغييرات
+                sh 'sudo cp -r * /var/www/html/'
+                sh 'sudo chown -R jenkins:www-data /var/www/html/storage /var/www/html/bootstrap/cache'
+                sh 'sudo chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache'
                 sh 'sudo systemctl restart apache2'
-
                 echo 'Application Deployed Successfully via Apache2! 🚀'
+            }
+        }
+
+        stage('Health Check') {
+            steps {
+                script {
+                    def statusCode = sh(script: 'curl -o /dev/null -s -w "%{http_code}" http://192.168.106.132', returnStdout: true).trim()
+                    if (statusCode != '200') {
+                        error("Laravel is not responding correctly! Status: ${statusCode}")
+                    }
+                }
             }
         }
 
         stage('Send Notifications') {
             steps {
                 echo 'Sending notifications...'
-              // mohamed.carinawear@gmail.com
-
+                emailext subject: "✅ Deployment Successful!", body: "Laravel deployment completed successfully.", to: 'mohamed.carinawear@gmail.com'
             }
+        }
+    }
+
+    post {
+        failure {
+            emailext subject: "❌ Deployment Failed!", body: "Check Jenkins logs.", to: 'mohamed.carinawear@gmail.com'
         }
     }
 }
